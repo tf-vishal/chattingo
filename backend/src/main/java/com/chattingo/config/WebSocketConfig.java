@@ -19,7 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // Parse allowed origins from environment variable
         String[] origins = allowedOrigins.split(",");
-        registry.addEndpoint("/ws").setAllowedOrigins:(origins).withSockJS();
+        registry.addEndpoint("/ws").setAllowedOrigins(origins).withSockJS();
     }
 
     @SuppressWarnings("null")
