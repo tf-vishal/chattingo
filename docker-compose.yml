@@ -2,8 +2,6 @@ services:
   frontend:
     build:
       context: ./frontend
-    depends_on:
-      - backend
     env_file:
       - ./frontend/.env
     healthcheck:
@@ -19,6 +17,7 @@ services:
       - "3000:3000"
     networks:
       - chattingo
+    restart: always
 
 
   mysql:
@@ -36,13 +35,15 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    depends_on:
+      - backend
     
   backend:
     build:
       context: ./backend
     restart: always
     depends_on:
-      - mysql
+      - frontend
     env_file:
       - ./backend/.env
     healthcheck:
