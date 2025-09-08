@@ -1,0 +1,65 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+    depends_on:
+      - backend
+    env_file:
+      - ./frontend/.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    
+    volumes:
+      - ./frontend:/usr/locall/app
+    ports:
+      - "3000:3000"
+    networks:
+      - chattingo
+
+
+  mysql:
+    image: mysql:latest
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - chattingo
+    restart: always
+    env_file:
+      - ./backend/.env
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    
+  backend:
+    build:
+      context: ./backend
+    restart: always
+    depends_on:
+      - mysql
+    env_file:
+      - ./backend/.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - ./backend:/usr/local/app
+    ports:
+      - "8080:8080"
+    networks:
+      - chattingo
+
+networks:
+  chattingo:
+
+volumes:
+  mysql_data:
