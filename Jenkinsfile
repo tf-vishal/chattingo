@@ -1,12 +1,14 @@
-@Library('Shared') _
+@Library('chattingo') _
 pipeline {
     agent any
     
     stages {
-        stage('Git Clone') { 
+        stage('Git Clone'){ 
             // Clone repository from GitHub (2 Marks)
-            script{
+            steps{
+                script{
                 clone("https://github.com/tf-vishal/chattingo.git", "main")
+                }
             }
         }
     }
