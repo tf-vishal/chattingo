@@ -9,8 +9,5 @@ pipeline {
             checkout scm
             }
         }
-        stage('Image Build'){
-
-        }
     }
 }
