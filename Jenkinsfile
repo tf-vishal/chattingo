@@ -9,7 +9,7 @@ pipeline {
                 script{
                 clone("https://github.com/tf-vishal/chattingo.git", "main")
                 }
-                sh "Copying Git repo successfulll"
+                echo "Copying Git repo successfulll"
             }
         }
     }
