@@ -5,12 +5,10 @@ pipeline {
     stages {
         stage('Git Clone'){ 
             // Clone repository from GitHub (2 Marks)
-            steps{
-                script{
-                clone("https://github.com/tf-vishal/chattingo.git", "main")
-                }
-                echo "Copying Git repo successfulll"
-            }
+            checkout scm
+        }
+        stage('Image Build'){
+
         }
     }
 }
