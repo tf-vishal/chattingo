@@ -15,5 +15,14 @@ pipeline {
                 sh "docker build -t tfvishal/chattingo-backend-image:1 ./backend"
             }
         }
+        stage('Image Scan'){
+            def imageName = "tfvishal/frontend-image:${BUILD_NUMBER}"
+            echo "🔍 Scanning ${imageName} for vulnerabilities..."
+            
+            // Run Trivy and fail the build on HIGH or CRITICAL vulnerabilities
+            sh """
+            trivy image --exit-code 1 --severity HIGH,CRITICAL ${imageName}
+            """
+        }
     }
 }
