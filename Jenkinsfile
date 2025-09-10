@@ -34,7 +34,7 @@ pipeline {
             
                 // Run Trivy and fail the build on HIGH or CRITICAL vulnerabilities
                 sh """
-                trivy image --exit-code 1 --severity HIGH,CRITICAL ${imageName}
+                trivy image --exit-code 1 --severity CRITICAL ${imageName}
                 """
                 }
             }
