@@ -38,7 +38,7 @@ pipeline {
         stages{
             steps{
                 script{
-                    def imageName= tfvishal/chattingo-frontend-image:1
+                    def imageName= "tfvishal/chattingo-frontend-image:1"
 
                     withCredentials([usernamePassword(
                         credentialsID: "dockerhub" ,
