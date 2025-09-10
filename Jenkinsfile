@@ -16,13 +16,15 @@ pipeline {
             }
         }
         stage('Image Scan'){
-            def imageName = "tfvishal/frontend-image:${BUILD_NUMBER}"
-            echo "🔍 Scanning ${imageName} for vulnerabilities..."
+            steps{
+                def imageName = "tfvishal/frontend-image:${BUILD_NUMBER}"
+                echo "🔍 Scanning ${imageName} for vulnerabilities..."
             
-            // Run Trivy and fail the build on HIGH or CRITICAL vulnerabilities
-            sh """
-            trivy image --exit-code 1 --severity HIGH,CRITICAL ${imageName}
-            """
+                // Run Trivy and fail the build on HIGH or CRITICAL vulnerabilities
+                sh """
+                trivy image --exit-code 1 --severity HIGH,CRITICAL ${imageName}
+                """
+            }
         }
     }
 }
