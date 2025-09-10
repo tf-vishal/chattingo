@@ -17,13 +17,26 @@ pipeline {
         }
         stage('Image Scan'){
             steps{
-                def imageName = "tfvishal/frontend-image:${BUILD_NUMBER}"
+                script {
+                    // Replace with your actual tag or variable
+                def imageName = "tfvishal/chattingo-frontend-image:1"
                 echo "🔍 Scanning ${imageName} for vulnerabilities..."
             
                 // Run Trivy and fail the build on HIGH or CRITICAL vulnerabilities
                 sh """
                 trivy image --exit-code 1 --severity HIGH,CRITICAL ${imageName}
                 """
+                }
+            script {
+                    // Replace with your actual tag or variable
+                def imageName = "tfvishal/chattingo-backend-image:1"
+                echo "🔍 Scanning ${imageName} for vulnerabilities..."
+            
+                // Run Trivy and fail the build on HIGH or CRITICAL vulnerabilities
+                sh """
+                trivy image --exit-code 1 --severity HIGH,CRITICAL ${imageName}
+                """
+                }
             }
         }
     }
