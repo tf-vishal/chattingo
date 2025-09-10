@@ -42,7 +42,7 @@ pipeline {
 
                     withCredentials([usernamePassword(
                         credentialsID: "dockerhub" ,
-                        passwordVariable: "dockerhubPass"
+                        passwordVariable: "dockerhubPass",
                         usernameVariable: "dockerhubUser"
                     )]){
                         sh "docker login -u ${env.dockerhubUser} -p ${env.dockerhubPass}"
