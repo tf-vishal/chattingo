@@ -9,5 +9,11 @@ pipeline {
             checkout scm
             }
         }
+        stage('Image Build'){
+            steps{
+                sh "docker build -t tfvishal/chattingo-frontend-image:1 ./frontend"
+                sh "docker build -t tfvishal/chattingo-backend-image:1 ./backend"
+            }
+        }
     }
 }
