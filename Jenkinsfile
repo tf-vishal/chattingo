@@ -35,5 +35,23 @@ pipeline {
                 }
             }
         }
+        stages{
+            steps{
+                script{
+                    def imageName= tfvishal/chattingo-frontend-image:1
+
+                    withCredentials([usernamePassword(
+                        credentialsID: "dockerhub" ,
+                        passwordVariable: "dockerhubPass"
+                        usernameVariable: "dockerhubUser"
+                    )]){
+                        sh "docker login -u ${env.dockerhubUser} -p ${env.dockerhubPass}"
+                        sh "docker image tag ${imageName} ${env.dockerhubUser}/${imageName}:1"
+                        sh "docker push ${dockerhubUser}/${imageName}:1"
+                        sh "echo '✅ Docker image pushed successfully!'"
+                    }
+                }
+            }
+        }
     }
 }
