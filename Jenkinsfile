@@ -35,7 +35,7 @@ pipeline {
                 }
             }
         }
-        stages{
+        stage{
             steps{
                 script{
                     def imageName= "tfvishal/chattingo-frontend-image:1"
