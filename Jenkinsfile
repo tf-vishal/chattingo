@@ -42,7 +42,7 @@ pipeline {
                     )]) {
                         sh "docker login -u ${dockerhubUser} -p ${dockerhubPass}"
                         sh "docker tag ${frontendImage} ${dockerhubUser}/${frontendImage}"
-                        sh "docker push ${dockerhubUser}/${frontendImage}"
+                        sh "docker push ${frontendImage}"
                         echo '✅ Docker image pushed successfully!'
                     }
                 }
