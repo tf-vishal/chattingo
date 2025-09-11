@@ -1,6 +1,14 @@
 @Library('chattingo') _
 pipeline {
     agent any
+    
+    environment{
+        FRONTEND_IMAGE = "tfvishal/chattingo-frontend-image"
+        BACKEND_IMAGE = "tfvishal/chattingo-backend-image"
+        BUILD_TAG = env.BUILD_NUMBER
+        FRONTEND_PATH = "./frontend"
+        BACKEND_PATH = "./backend"
+    }
 
     tools{
         maven 'Maven'
@@ -16,21 +24,18 @@ pipeline {
 
         stage('Image Build') {
             steps {
-                sh "docker build -t tfvishal/chattingo-frontend-image:${env.BUILD_NUMBER} ./frontend"
-                sh "docker build -t tfvishal/chattingo-backend-image:${env.BUILD_NUMBER} ./backend"
+                script{
+                    imageBuild(FRONTEND_IMAGE, FRONTEND_PATH)
+                    imageBuild(BACKEND_IMAGE, BACKEND_PATH)
+                }
             }
         }
 
         stage('Image Scan') {
             steps {
                 script {
-                    def frontendImage = "tfvishal/chattingo-frontend-image:${env.BUILD_NUMBER}"
-                    echo "🔍 Scanning ${frontendImage} for vulnerabilities..."
-                    //sh "trivy image --exit-code 1 --severity HIGH,CRITICAL ${frontendImage}"
-
-                    def backendImage = "tfvishal/chattingo-backend-image:${env.BUILD_NUMBER}"
-                    echo "🔍 Scanning ${backendImage} for vulnerabilities..."
-                    //sh "trivy image --exit-code 1 --severity CRITICAL ${backendImage}"
+                    imageScan(FRONTEND_IMAGE)
+                    imageScan(BACKEND_IMAGE)
                 }
             }
         }
@@ -39,57 +44,26 @@ pipeline {
         stage('Push Image') {
             steps {
                 script {
-                    def frontendImage = "tfvishal/chattingo-frontend-image:${env.BUILD_NUMBER}"
-                    def backendImage = "tfvishal/chattingo-backend-image:${env.BUILD_NUMBER}"
-                    withCredentials([usernamePassword(
-                        credentialsId: 'dockerhub',
-                        passwordVariable: 'dockerhubPass',
-                        usernameVariable: 'dockerhubUser'
-                    )]) {
-
-                        def frontendImageTag = "tfvishal/chattingo-frontend-image:${env.BUILD_NUMBER}"
-                        def backendImageTag = "tfvishal/chattingo-backend-image:${env.BUILD_NUMBER}"
-
-                        sh "echo '${dockerhubPass}' | docker login --username '${dockerhubUser}' --password-stdin"
-
-                        sh "docker tag ${frontendImage} ${frontendImageTag}"
-                        sh "docker push ${frontendImageTag}"
-                        echo '✅ Docker Backend image pushed successfully!'
-
-                        sh "docker tag ${backendImage} ${backendImageTag}"
-                        sh "docker push ${backendImageTag}"
-                        echo '✅ Docker Backend image pushed successfully!'
+                    docker_push(FRONTEND_IMAGE)
+                    docker_push(BACKEND_IMAGE)
                     }
                 }
             }
         }
         stage('Loading Env FIles'){
             steps{
-                withCredentials([   
-                    file(credentialsId: 'backend-env',
-                    variable: 'BACKEND_ENV_FILE'),
-                    file(credentialsId: 'frontend-env',
-                    variable: 'FRONTEND_ENV_FILE')
-                ])
-
-                {
-                    sh '''
-                    chmod -R u+w ./backend ./frontend
-                    cp "$BACKEND_ENV_FILE" ./backend/.env
-                    cp "$FRONTEND_ENV_FILE" ./frontend/.env
-
-                    ls -l ./backend/.env ./frontend/.env'''
+                script{
+                    envLoading("frontend", FRONTEND_PATH)
+                    envLoading("backend", BACKEND_PATH)
                 }
             }
         }
         stage ('Deploy Image'){
             steps{
-                sh "docker compose down"
-                sh "export BUILD_NUMBER=${env.BUILD_NUMBER} && docker compose up -d"
-                sh "docker compose pull"
-                sh "docker compose up -d"
-
-                sh "rm -f ./backend/.env ./frontend/.env"
+               script{
+                deployImage(FRONTEND_IMAGE)
+                deployImage(BACKEND_IMAGE)
+               }
             }
         }
 
