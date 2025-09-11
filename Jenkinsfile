@@ -16,19 +16,19 @@ pipeline {
 
         stage('Image Build') {
             steps {
-                sh "docker build -t tfvishal/chattingo-frontend-image:1 ./frontend"
-                sh "docker build -t tfvishal/chattingo-backend-image:1 ./backend"
+                sh "docker build -t tfvishal/chattingo-frontend-image:${env.BUILD_NUMBER} ./frontend"
+                sh "docker build -t tfvishal/chattingo-backend-image:${env.BUILD_NUMBER} ./backend"
             }
         }
 
         stage('Image Scan') {
             steps {
                 script {
-                    def frontendImage = "tfvishal/chattingo-frontend-image:1"
+                    def frontendImage = "tfvishal/chattingo-frontend-image:${env.BUILD_NUMBER}"
                     echo "🔍 Scanning ${frontendImage} for vulnerabilities..."
                     //sh "trivy image --exit-code 1 --severity HIGH,CRITICAL ${frontendImage}"
 
-                    def backendImage = "tfvishal/chattingo-backend-image:1"
+                    def backendImage = "tfvishal/chattingo-backend-image:${env.BUILD_NUMBER}"
                     echo "🔍 Scanning ${backendImage} for vulnerabilities..."
                     //sh "trivy image --exit-code 1 --severity CRITICAL ${backendImage}"
                 }
@@ -39,15 +39,28 @@ pipeline {
         stage('Push Image') {
             steps {
                 script {
-                    def frontendImage = "tfvishal/chattingo-frontend-image:1"
+                    def frontendImage = "tfvishal/chattingo-frontend-image"
                     withCredentials([usernamePassword(
                         credentialsId: 'dockerhub',
                         passwordVariable: 'dockerhubPass',
                         usernameVariable: 'dockerhubUser'
                     )]) {
                         sh "docker login -u ${dockerhubUser} -p ${dockerhubPass}"
-                        sh "docker tag ${frontendImage} ${dockerhubUser}/${frontendImage}"
+                        sh "docker tag ${frontendImage} ${dockerhubUser}/${frontendImage}:${env.BUILD_NUMBER}"
                         sh "docker push ${frontendImage}"
+                        echo '✅ Docker image pushed successfully!'
+                    }
+                }
+                script {
+                    def backendImage = "tfvishal/chattingo-backend-image"
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub',
+                        passwordVariable: 'dockerhubPass',
+                        usernameVariable: 'dockerhubUser'
+                    )]) {
+                        sh "docker login -u ${dockerhubUser} -p ${dockerhubPass}"
+                        sh "docker tag ${backendImage} ${dockerhubUser}/${backendImage}:${env.BUILD_NUMBER}"
+                        sh "docker push ${backendImage}"
                         echo '✅ Docker image pushed successfully!'
                     }
                 }
