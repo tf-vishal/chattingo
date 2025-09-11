@@ -18,7 +18,7 @@ RUN npm run build
 FROM node:20.19-alpine AS dev
 WORKDIR /app
 COPY --from=build /app/node_modules ./node_modules
-COPY . .
+
 
 EXPOSE 3000
-CMD ["npm", "start
+CMD ["npm", "start"]
