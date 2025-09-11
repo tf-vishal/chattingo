@@ -12,13 +12,13 @@ COPY src ./src
 COPY public ./public
 COPY package.json tailwind.config.js ./
 
-RUN npm run build
+RUN npm run run build
 
 # Stage 3: run
 FROM node:20.19-alpine AS dev
 WORKDIR /app
 COPY --from=build /app/node_modules ./node_modules
-
+COPY . .
 
 EXPOSE 3000
 CMD ["npm", "start"]
