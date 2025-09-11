@@ -39,7 +39,7 @@ pipeline {
         stage('Push Image') {
             steps {
                 script {
-                    def frontendImage = "tfvishal/chattingo-frontend-image"
+                    def frontendImage = "tfvishal/chattingo-frontend-image:${env.BUILD_NUMBER}"
                     withCredentials([usernamePassword(
                         credentialsId: 'dockerhub',
                         passwordVariable: 'dockerhubPass',
@@ -52,7 +52,7 @@ pipeline {
                     }
                 }
                 script {
-                    def backendImage = "tfvishal/chattingo-backend-image"
+                    def backendImage = "tfvishal/chattingo-backend-image:${env.BUILD_NUMBER}"
                     withCredentials([usernamePassword(
                         credentialsId: 'dockerhub',
                         passwordVariable: 'dockerhubPass',
