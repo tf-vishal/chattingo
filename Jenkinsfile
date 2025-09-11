@@ -74,7 +74,7 @@ pipeline {
             sh "docker image prune -f"
         }
         failure{
-            echo "Deployment error, rolling back to Previous version.
+            echo "Deployment error, rolling back to Previous version."
 
             steps{
                 script{
