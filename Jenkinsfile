@@ -55,18 +55,20 @@ pipeline {
         }
         stage('Loading Env FIles'){
             steps{
-                withCredentials([
+                withCredentials([   
                     file(credentialsId: 'backend-env',
                     variable: 'BACKEND_ENV_FILE'),
                     file(credentialsId: 'frontend-env',
                     variable: 'FRONTEND_ENV_FILE')
                 ])
 
-                sh '''
-                cp "$BACKEND_ENV_FILE" ./backend/.env
-                cp "$FRONTEND_ENV_FILE" ./frontend/.env
+                {
+                    sh '''
+                    cp "$BACKEND_ENV_FILE" ./backend/.env
+                    cp "$FRONTEND_ENV_FILE" ./frontend/.env
 
-                ls -l ./backend/.env ./frontend/.env'''
+                    ls -l ./backend/.env ./frontend/.env'''
+                }
             }
         }
         stage ('Deploy Image'){
