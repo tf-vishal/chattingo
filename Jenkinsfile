@@ -5,7 +5,7 @@ pipeline {
     environment {
         FRONTEND_IMAGE = "tfvishal/chattingo-frontend-image"
         BACKEND_IMAGE  = "tfvishal/chattingo-backend-image"
-        BUILD_TAG      = "env.BUILD_NUMBER"
+        BUILD_TAG      = "${env.BUILD_NUMBER}"
         FRONTEND_PATH  = "./frontend"
         BACKEND_PATH   = "./backend"
     }
