@@ -61,10 +61,12 @@ pipeline {
         stage('Deploy Image') {
             steps {
                 script {
-                    deployImage(FRONTEND_IMAGE)
+                    try{
+                         deployImage(FRONTEND_IMAGE)
                     deployImage(BACKEND_IMAGE)
-                }, catch (err){
-                    env.BUILD_STATUS = 'true'
+                    } catch (err){
+                        env.BUILD_STATUS = 'true'
+                        }   
                 }
             }
         }
