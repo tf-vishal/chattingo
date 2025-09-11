@@ -2,6 +2,11 @@
 pipeline {
     agent any
 
+    tools{
+        Maven '3.9.11'
+        Docker 'latest'
+    }
+
     stages {
 
         stage('Git Clone') { // Clone repository from GitHub
@@ -12,7 +17,7 @@ pipeline {
 
         stage('Image Build') {
             steps {
-                sh "docker build -t tfvishal/chattingo-frontend-image:1 ./frontend"
+                sh "docker build -t tfvishal/chattingo-frontend-image: ./frontend"
                 sh "docker build -t tfvishal/chattingo-backend-image:1 ./backend"
             }
         }
@@ -30,6 +35,7 @@ pipeline {
                 }
             }
         }
+        
 
         stage('Push Image') {
             steps {
@@ -48,11 +54,29 @@ pipeline {
                 }
             }
         }
-        stage ('Build Image'){
+        stage{
+            steps{
+                withCredentials([
+                    file(credentialsId: 'backend-env',
+                    variable: 'BACKEND_ENV_FILE'),
+                    file(credentialsId: 'frontend-env',
+                    variable: 'FRONTEND_ENV_FILE')
+                ])
+
+                sh '''
+                cp "$BACKEND_ENV_FILE" ./backend/.env
+                cp "$FRONTEND_ENV_FILE" ./frontend/.env
+
+                ls -l ./backend/.env ./frontend/.env'''
+            }
+        }
+        stage ('Deploy Image'){
             steps{
                 sh "docker compose down"
                 sh "docker compose pull"
                 sh "docker compose up -d"
+
+                rm -f ./backend/.env ./frontend/.env
             }
         }
 
