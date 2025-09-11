@@ -1,16 +1,16 @@
 @Library('chattingo') _
 pipeline {
     agent any
-    
-    environment{
+
+    environment {
         FRONTEND_IMAGE = "tfvishal/chattingo-frontend-image"
-        BACKEND_IMAGE = "tfvishal/chattingo-backend-image"
-        BUILD_TAG = env.BUILD_NUMBER
-        FRONTEND_PATH = "./frontend"
-        BACKEND_PATH = "./backend"
+        BACKEND_IMAGE  = "tfvishal/chattingo-backend-image"
+        BUILD_TAG      = env.BUILD_NUMBER
+        FRONTEND_PATH  = "./frontend"
+        BACKEND_PATH   = "./backend"
     }
 
-    tools{
+    tools {
         maven 'Maven'
     }
 
@@ -24,7 +24,7 @@ pipeline {
 
         stage('Image Build') {
             steps {
-                script{
+                script {
                     imageBuild(FRONTEND_IMAGE, FRONTEND_PATH)
                     imageBuild(BACKEND_IMAGE, BACKEND_PATH)
                 }
@@ -39,31 +39,31 @@ pipeline {
                 }
             }
         }
-        
 
         stage('Push Image') {
             steps {
                 script {
                     docker_push(FRONTEND_IMAGE)
                     docker_push(BACKEND_IMAGE)
-                    }
                 }
             }
         }
-        stage('Loading Env FIles'){
-            steps{
-                script{
+
+        stage('Loading Env Files') {
+            steps {
+                script {
                     envLoading("frontend", FRONTEND_PATH)
                     envLoading("backend", BACKEND_PATH)
                 }
             }
         }
-        stage ('Deploy Image'){
-            steps{
-               script{
-                deployImage(FRONTEND_IMAGE)
-                deployImage(BACKEND_IMAGE)
-               }
+
+        stage('Deploy Image') {
+            steps {
+                script {
+                    deployImage(FRONTEND_IMAGE)
+                    deployImage(BACKEND_IMAGE)
+                }
             }
         }
 
