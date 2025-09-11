@@ -160,7 +160,7 @@ pipeline {
         stage('Git Clone') { 
             // Clone repository from GitHub (2 Marks)
         }
-        stage('Image Build') { 
+        stage('fi') { 
             // Build Docker images for frontend & backend (2 Marks)
         }
         stage('Filesystem Scan') { 

@@ -1,18 +1,17 @@
 services:
   frontend:
-    build:
-      context: ./frontend
+    image: tfvishal/chattingo-frontend-image:${BUILD_NUMBER}
     env_file:
       - ./frontend/.env
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "http://20.120.225.170:3000"]
       interval: 15s
       timeout: 5s
       retries: 5
       start_period: 10s
     
     volumes:
-      - ./frontend:/usr/locall/app
+      - ./frontend:/usr/local/app
     ports:
       - "3000:3000"
     networks:
@@ -39,15 +38,14 @@ services:
       - backend
     
   backend:
-    build:
-      context: ./backend
+    image: tfvishal/chattingo-frontend-image:${BUILD_NUMBER}
     restart: always
     depends_on:
       - frontend
     env_file:
       - ./backend/.env
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      test: ["CMD", "curl", "-f", "http://20.120.225.170:8080"]
       interval: 15s
       timeout: 5s
       retries: 5
