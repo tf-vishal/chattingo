@@ -63,7 +63,7 @@ pipeline {
                 script {
                     deployImage(FRONTEND_IMAGE)
                     deployImage(BACKEND_IMAGE)
-                }catch (err){
+                }, catch (err){
                     env.BUILD_STATUS = 'true'
                 }
             }
