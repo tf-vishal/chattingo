@@ -43,8 +43,8 @@ pipeline {
         stage('Push Image') {
             steps {
                 script {
-                    docker_push(FRONTEND_IMAGE)
-                    docker_push(BACKEND_IMAGE)
+                    docker_push(FRONTEND_IMAGE, BUILD_TAG)
+                    docker_push(BACKEND_IMAGE, BUILD_TAG)
                 }
             }
         }
