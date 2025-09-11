@@ -71,8 +71,9 @@ pipeline {
             }
         }
         stage('Rollback'){
-                when {
-                    env.BUILD_STATUS == 'true'
+                when { expression{
+                        env.BUILD_STATUS == 'true'
+                    }  
                 }
                 steps{
                     script{
