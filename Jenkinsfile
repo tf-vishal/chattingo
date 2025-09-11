@@ -78,7 +78,7 @@ pipeline {
                 steps{
                     script{
                         rollback(FRONTEND_IMAGE)
-                        rollback(BACKEND_IMAGE  )
+                        rollback(BACKEND_IMAGE)
                     }
                 }
             }

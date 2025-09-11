@@ -12,7 +12,7 @@ COPY src ./src
 COPY public ./public
 COPY package.json tailwind.config.js ./
 
-RUN npm run run build
+RUN npm run build
 
 # Stage 3: run
 FROM node:20.19-alpine AS dev
