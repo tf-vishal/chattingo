@@ -76,12 +76,12 @@ pipeline {
         failure{
             echo "Deployment error, rolling back to Previous version."
 
-            steps{
+           
                 script{
                     rollback(FRONTEND_IMAGE)
                     rollback(BACKEND_IMAGE)
                 }
-            }
+            
         }
     }
 }
