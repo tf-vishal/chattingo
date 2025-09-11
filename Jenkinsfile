@@ -68,4 +68,20 @@ pipeline {
         }
 
     }
+    post{
+        always{
+            echo "CLEANIGN UP RESEDUAL IMAGES"
+            sh "docker image prune -f"
+        }
+        failure{
+            echo "Deployment error, rolling back to (${BUILD_TAG}"-1) version.
+
+            steps{
+                script{
+                    rollback(FRONTEND_IMAGE)
+                    rollback(BACKEND_IMAGE)
+                }
+            }
+        }
+    }
 }
