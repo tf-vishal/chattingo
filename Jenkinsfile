@@ -3,8 +3,8 @@ pipeline {
     agent any
 
     tools{
-        Maven '3.9.11'
-        Docker 'latest'
+        Maven 'Maven'
+        Docker 'Docker'
     }
 
     stages {
@@ -17,7 +17,7 @@ pipeline {
 
         stage('Image Build') {
             steps {
-                sh "docker build -t tfvishal/chattingo-frontend-image: ./frontend"
+                sh "docker build -t tfvishal/chattingo-frontend-image:1 ./frontend"
                 sh "docker build -t tfvishal/chattingo-backend-image:1 ./backend"
             }
         }
