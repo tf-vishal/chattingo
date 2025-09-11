@@ -77,6 +77,8 @@ pipeline {
                 }
                 steps{
                     script{
+                        imageDel(FRONTEND_IMAGE)
+                        imageDel(BACKEND_IMAGE)
                         rollback(FRONTEND_IMAGE)
                         rollback(BACKEND_IMAGE)
                     }
