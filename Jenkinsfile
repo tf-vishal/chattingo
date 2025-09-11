@@ -62,8 +62,8 @@ pipeline {
             steps {
                 script {
                     try{
-                         deployImage(FRONTEND_IMAGE)
-                    deployImage(BACKEND_IMAGE)
+                        deployImage(FRONTEND_IMAGE)
+                        deployImage(BACKEND_IMAGE)
                     } catch (err){
                         env.BUILD_STATUS = 'true'
                         }   
