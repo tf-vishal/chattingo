@@ -85,6 +85,7 @@ pipeline {
         stage ('Deploy Image'){
             steps{
                 sh "docker compose down"
+                sh "export BUILD_NUMBER=${env.BUILD_NUMBER} && docker compose up -d"
                 sh "docker compose pull"
                 sh "docker compose up -d"
 
