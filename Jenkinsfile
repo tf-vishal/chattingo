@@ -76,7 +76,7 @@ pipeline {
                 sh "docker compose pull"
                 sh "docker compose up -d"
 
-                rm -f ./backend/.env ./frontend/.env
+                sh "rm -f ./backend/.env ./frontend/.env"
             }
         }
 
