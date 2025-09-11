@@ -63,25 +63,28 @@ pipeline {
                 script {
                     deployImage(FRONTEND_IMAGE)
                     deployImage(BACKEND_IMAGE)
+                } catch (err){
+                    env.BUILD_STATUS = 'true'
                 }
             }
         }
+        stage('Rollback'){
+                when {
+                    env.BUILD_STATUS == 'true'
+                }
+                steps{
+                    script{
+                        rollback(FRONTEND_IMAGE)
+                        rollback(BACKEND_IMAGE  )
+                    }
+                }
+            }
 
     }
     post{
         always{
             echo "CLEANIGN UP RESEDUAL IMAGES"
             sh "docker image prune -f"
-        }
-        failure{
-            echo "Deployment error, rolling back to Previous version."
-
-           
-                script{
-                    rollback(FRONTEND_IMAGE)
-                    rollback(BACKEND_IMAGE)
-                }
-            
         }
     }
 }
