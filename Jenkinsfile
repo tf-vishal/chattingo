@@ -64,6 +64,7 @@ pipeline {
 
                 {
                     sh '''
+                    chmod -R u+w ./backend ./frontend
                     cp "$BACKEND_ENV_FILE" ./backend/.env
                     cp "$FRONTEND_ENV_FILE" ./frontend/.env
 
