@@ -7,7 +7,7 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      - backend   # ✅ nginx starts after backend
+      - backend  
     restart: always
     networks:
       - chattingo
@@ -24,8 +24,8 @@ services:
       start_period: 10s
     volumes:
       - ./frontend:/usr/local/app
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     networks:
       - chattingo
     restart: always
@@ -43,8 +43,8 @@ services:
       start_period: 10s
     volumes:
       - ./backend:/usr/local/app
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     networks:
       - chattingo
 
