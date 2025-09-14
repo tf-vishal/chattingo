@@ -1,5 +1,4 @@
 services:
-
   nginx:
     build:
       context: ./nginx
@@ -8,22 +7,21 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      - backend
+      - backend   # ✅ nginx starts after backend
     restart: always
     networks:
       - chattingo
+
   frontend:
     image: ${FRONTEND_IMAGE}:${BUILD_TAG}
     env_file:
       - ./frontend/.env
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://20.120.225.170:3000"]
+      test: ["CMD", "curl", "-f", "http://frontend:3000"]
       interval: 15s
       timeout: 5s
       retries: 5
       start_period: 10s
-    depends_on:
-      - nginx
     volumes:
       - ./frontend:/usr/local/app
     ports:
@@ -32,6 +30,23 @@ services:
       - chattingo
     restart: always
 
+  backend:
+    image: ${BACKEND_IMAGE}:${BUILD_TAG}
+    restart: always
+    env_file:
+      - ./backend/.env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://backend:8080"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - ./backend:/usr/local/app
+    ports:
+      - "8080:8080"
+    networks:
+      - chattingo
 
   mysql:
     image: mysql:latest
@@ -50,26 +65,6 @@ services:
       start_period: 10s
     depends_on:
       - backend
-    
-  backend:
-    image: ${BACKEND_IMAGE}:${BUILD_TAG}
-    restart: always
-    depends_on:
-      - frontend
-    env_file:
-      - ./backend/.env
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://20.120.225.170:8080"]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    volumes:
-      - ./backend:/usr/local/app
-    ports:
-      - "8080:8080"
-    networks:
-      - chattingo
 
 networks:
   chattingo:
