@@ -1,4 +1,17 @@
 services:
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - chattingo
   frontend:
     image: ${FRONTEND_IMAGE}:${BUILD_TAG}
     env_file:
@@ -9,7 +22,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-    
+    depends_on:
+      - nginx
     volumes:
       - ./frontend:/usr/local/app
     ports:
