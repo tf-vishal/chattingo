@@ -82,6 +82,7 @@ pipeline {
                         rollback(FRONTEND_IMAGE)
                         rollback(BACKEND_IMAGE)
                     }
+                    sh "docker compose down"
                 }
             }
 
