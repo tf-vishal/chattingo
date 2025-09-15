@@ -1,16 +1,16 @@
 services:
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - backend  
-    restart: always
-    networks:
-      - chattingo
+  #nginx:
+   # build:
+    #  context: ./nginx
+     # dockerfile: Dockerfile
+    #ports:
+    #  - "80:80"
+    #  - "443:443"
+    #depends_on:
+    #  - backend  
+    #restart: always
+    #networks:
+    #  - chattingo
 
   frontend:
     image: ${FRONTEND_IMAGE}:${BUILD_TAG}
