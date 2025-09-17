@@ -5,9 +5,11 @@ pipeline {
     environment {
         FRONTEND_IMAGE = "tfvishal/chattingo-frontend-image"
         BACKEND_IMAGE  = "tfvishal/chattingo-backend-image"
+        NGINX_IMAGE = "tfvishal/chattingo-nginx-image"
         BUILD_TAG      = "${env.BUILD_NUMBER}"
         FRONTEND_PATH  = "./frontend"
         BACKEND_PATH   = "./backend"
+        NGINX_PATH = "./nginx"
     }
 
     tools {
@@ -27,6 +29,7 @@ pipeline {
                 script {
                     imageBuild(FRONTEND_IMAGE, FRONTEND_PATH)
                     imageBuild(BACKEND_IMAGE, BACKEND_PATH)
+                    imageBuild(NGINX_IMAGE, NGINX_PATH)
                 }
             }
         }
@@ -36,6 +39,7 @@ pipeline {
                 script {
                     imageScan(FRONTEND_IMAGE)
                     imageScan(BACKEND_IMAGE)
+                    imageScan(NGINX_IMAGE)
                 }
             }
         }
@@ -45,6 +49,7 @@ pipeline {
                 script {
                     docker_push(FRONTEND_IMAGE)
                     docker_push(BACKEND_IMAGE)
+                    docker_push(NGINX_IMAGE)
                 }
             }
         }
@@ -64,6 +69,7 @@ pipeline {
                     try{
                         deployImage(FRONTEND_IMAGE)
                         deployImage(BACKEND_IMAGE)
+                        deployImage(NGINX_IMAGE)
                     } catch (err){
                         env.BUILD_STATUS = 'true'
                         }   
@@ -81,6 +87,7 @@ pipeline {
                         imageDel(BACKEND_IMAGE)
                         rollback(FRONTEND_IMAGE)
                         rollback(BACKEND_IMAGE)
+                        rollback(NGINX_IMAGE)
                     }
                     
                 }

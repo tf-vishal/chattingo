@@ -1,7 +1,6 @@
 services:
   nginx:
-    build:
-      context: ./nginx
+    image: ${NGINX_IMAGE}:${BUILDTAG}
     ports:
       - "80:80"
       - "443:443"
