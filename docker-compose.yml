@@ -24,8 +24,8 @@ services:
       start_period: 10s
     volumes:
       - ./frontend:/usr/local/app
-    expose:
-      - "3000"
+    ports:
+      - "3000:3000"
     networks:
       - chattingo
     restart: always
@@ -43,8 +43,8 @@ services:
       start_period: 10s
     volumes:
       - ./backend:/usr/local/app
-    expose:
-      - "8080"
+    ports:
+      - "8080:8080"
     networks:
       - chattingo
 
