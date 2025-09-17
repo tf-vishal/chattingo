@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: ${NGINX_IMAGE}:${BUILDTAG}
+    image: ${NGINX_IMAGE}:${BUILD_TAG}
     ports:
       - "80:80"
       - "443:443"
